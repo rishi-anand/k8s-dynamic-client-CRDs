@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"flag"
+	"github.com/spectrocloud/palette/api/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/watch"
@@ -64,13 +65,16 @@ func watchSpectroCluster(ctx context.Context) {
 					return
 				}
 
-				//pod, ok := e.Object.(*core.Pod)
-				//if !ok {
-				//	continue
-				//}
+				spect, ok := e.Object.(*v1alpha1.SpectroCluster)
+				if !ok {
+					klog.Error("inside !ok")
+					continue
+				}
 
+				klog.Info("Spectro: ", spect)
 				byte, err := json.Marshal(e)
 				if err != nil {
+					klog.Error("Error: failed to parse ", err)
 					return
 				}
 
